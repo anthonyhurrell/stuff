@@ -1,0 +1,54 @@
+#!Groovy
+@Library("platform.infrastructure.pipelinelibrary") _
+
+//Build/CI Section
+
+nodeId = platformDefaults.getBuildNodeLabel()
+
+node(nodeId) {
+
+	stage("Checkout") {
+		deleteDir()
+		checkout scm
+	}
+	
+	//Build/compile/test
+	gradleBuild()
+
+	//Create Docker image and upload to ECR
+	dockerBuildPush()
+
+}
+// useless comment
+//Deploy/CD Section
+
+def ecsDeployParametersPath = 'cloudformation/deploy/parameters.json'
+def deployNodeId = platformDefaults.getDeployNodeLabel()
+
+	withNodeWrapper(deployNodeId) {
+
+		//ECS deploy
+		//eis-deliverydevqa
+		createOrUpdateCloudformationStack deployEnv: "devqa",
+				region: "us-east-1",
+				templatePath: "cloudformation/StackBookMiddle-PlatformTraining-template.yaml",
+				parameters: "",
+				stackName: "StackBookMiddle-PlatformTraining"
+
+		withDeployWrapper('devqa'){
+			ecsDeploy deployEnv: 'devqa', parametersPath: ecsDeployParametersPath
+			performRelease releaseMethod: 'fast', deployEnv: 'devqa' 
+		}
+
+		//eis-deliveryintegration
+//		withDeployWrapper('integration'){
+//			ecsDeploy deployEnv: 'integration', templatePath: ecsDeployTemplatePath, parametersPath: ecsDeployParametersPath
+//			performRelease releaseMethod: 'fast', deployEnv: 'integration'
+//		}
+
+		//eis-deliverylive
+//		withDeployWrapper('live'){
+//			ecsDeploy deployEnv: 'live', templatePath: ecsDeployTemplatePath, parametersPath: ecsDeployParametersPath
+//			performRelease releaseMethod: 'canary', deployEnv: 'live'
+//		}
+	}

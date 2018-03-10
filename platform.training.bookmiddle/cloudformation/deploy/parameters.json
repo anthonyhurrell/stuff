@@ -1,0 +1,34 @@
+[{
+    "ParameterKey": "AppType",
+    "ParameterValue": "java"
+},{
+    "ParameterKey": "JVMArgs",
+    "ParameterValue": "-Xmx768m -Xms128m -XX:+PrintFlagsFinal -XX:+PrintGCDetails -Dspring.profiles.active=%ENVIRONMENT_VALUE"
+},{
+    "ParameterKey": "TaskMemory",
+    "ParameterValue": "1024"
+},{
+    "ParameterKey": "TaskRole",
+    "ParameterValue": "RoleBookMiddle-PlatformTraining"
+}, {
+    "ParameterKey": "ECSScalingRole",
+    "ParameterValue": "%ECS_AUTOSCALING_ROLE"
+}, {
+    "ParameterKey": "Environment",
+    "ParameterValue": "%ENVIRONMENT_VALUE"
+}, {
+    "ParameterKey": "ProjectName",
+    "ParameterValue": "%PROJECT_NAME"
+}, {
+    "ParameterKey": "TeamName",
+    "ParameterValue": "%TEAM_NAME"
+}, {
+    "ParameterKey": "ClusterName",
+    "ParameterValue": "%CLUSTER_NAME"
+}, {
+    "ParameterKey": "ImageId",
+    "ParameterValue": "%IMAGEID"
+}, {
+    "ParameterKey": "AppVersion",
+    "ParameterValue": "%APPVERSION"
+}]
